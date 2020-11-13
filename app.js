@@ -12,14 +12,17 @@ app.use(express.json());
 
 app.use(router);
 
+let onlineUsers = [];
+
 io.on('connection', (socket) => {
     console.log('a user connected');
+    socket.on('userLogin', (username) => {
+        console.log(username);
+        onlineUsers.push(username)
+        io.emit('userLogin', onlineUsers)
+    })
 })
 
 http.listen(port, () => {
     console.log(`Listen to http:localhost:${port}`);
 })
-
-// app.listen(port, () => {
-//     console.log(`Listen to http:localhost:${port}`);
-// })
