@@ -17,9 +17,20 @@ let onlineUsers = [];
 io.on('connection', (socket) => {
     console.log('a user connected');
     socket.on('userLogin', (username) => {
-        console.log(username);
         onlineUsers.push(username)
         io.emit('userLogin', onlineUsers)
+    })
+    socket.on('getPlayers', () => {
+        io.emit('getPlayers', onlineUsers)
+    })
+    socket.on('addScore', (payload) => {
+        let data = onlineUsers.map(el => {
+            if (el.username === payload.username) {
+                el.score = payload.score
+            }
+            return el
+        })
+        io.emit('addScore', data)
     })
 })
 
